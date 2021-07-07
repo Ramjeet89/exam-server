@@ -1,5 +1,6 @@
 package com.exam.config;
 
+import com.exam.constant.ExamPortalConstant;
 import com.exam.service.Impl.UserDetailsServiceImpl;
 import io.jsonwebtoken.ExpiredJwtException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,24 +31,24 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                                     HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
 
-        final String requestTokenHeader = request.getHeader("Authorization");
+        final String requestTokenHeader = request.getHeader(ExamPortalConstant.AUTHORIZATION);
         System.out.println(requestTokenHeader);
         String username = null;
         String jwtToken = null;
 
-        if (requestTokenHeader != null && requestTokenHeader.startsWith("Bearer")) {
+        if (requestTokenHeader != null && requestTokenHeader.startsWith(ExamPortalConstant.BEARER)) {
             jwtToken = requestTokenHeader.substring(7);
             try {
                 username = this.jwtUtil.extractUsername(jwtToken);
             } catch (ExpiredJwtException e) {
                 e.printStackTrace();
-                System.out.println("Jwt Token has expired " + e);
+                System.out.println(ExamPortalConstant.JWT_TOKEN_EXPIRED + e);
             } catch (Exception e) {
                 e.printStackTrace();
-                System.out.println("error");
+                System.out.println(ExamPortalConstant.ERROR);
             }
         } else {
-            System.out.println("Invalid token, not start with bearer starting");
+            System.out.println(ExamPortalConstant.INVALID_TOKEN);
         }
         //Validate tokens
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
@@ -60,7 +61,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
              SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthentication);
          }
         }else {
-            System.out.println("Token is not valid");
+            System.out.println(ExamPortalConstant.TOKEN_NOT_VALID);
         }
         filterChain.doFilter(request,response);
     }

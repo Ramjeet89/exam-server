@@ -2,6 +2,7 @@ package com.exam.controller;
 
 import com.exam.config.JwtUtils;
 
+import com.exam.constant.ExamPortalConstant;
 import com.exam.helper.UserNotFoundException;
 import com.exam.model.JWTRequest;
 import com.exam.model.JWTResponse;
@@ -38,7 +39,7 @@ public class AuthenticateController {
             authenticate(jwtRequest.getUsername(), jwtRequest.getPassword());
         } catch (UserNotFoundException e) {
             e.printStackTrace();
-            throw new Exception("User Not found");
+            throw new Exception(ExamPortalConstant.USER_NOT_FOUNT);
         }
         //authenticate
         UserDetails userDetails = this.userDetailsService.loadUserByUsername(jwtRequest.getUsername());
@@ -50,9 +51,9 @@ public class AuthenticateController {
         try {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
         } catch (DisabledException e) {
-            throw new Exception("USER DISABLED " + e.getMessage());
+            throw new Exception(ExamPortalConstant.USER_DISABLED + e.getMessage());
         } catch (BadCredentialsException e) {
-            throw new Exception("Invalid Credentials " + e.getMessage());
+            throw new Exception(ExamPortalConstant.INVALID_CREDENTIAL + e.getMessage());
         }
     }
 

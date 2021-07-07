@@ -27,7 +27,7 @@ public class UserServiceImpl implements UserService {
         User local = this.userRepository.findByUsername(user.getUsername());
 
         if (local != null) {
-            System.out.println("User is Already  there.");
+           // System.out.println("User is Already  there.");
             throw new UserFoundException();
 
         } else {
